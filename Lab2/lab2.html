@@ -1,0 +1,92 @@
+<style>
+  .artist-card {
+    text-align: center;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  .artist-name {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .portfolio-item {
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .item-title {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .item-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border: 2px solid #000;
+    border-radius: 5px;
+  }
+</style>
+
+<template id="artist-card-template">
+  <div class="artist-card">
+    <h2 class="artist-name"></h2>
+    <div class="portfolio">
+    </div>
+  </div>
+</template>
+
+<template id="portfolio-item-template">
+  <div class="portfolio-item">
+    <h3 class="item-title"></h3>
+    <img class="item-image" src="" alt="">
+  </div>
+</template>
+
+<div id="artist-list"></div>
+
+<script>
+const artist = {
+  name: "Van Gogh",
+  portfolio: [
+    {
+      title: "portrait",
+      url: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/436532/1671316/main-image"
+    },
+    {
+      title: "sky",
+      url: "https://mymodernmet.com/wp/wp-content/uploads/2020/11/White-house-night-van-goh-worldwide-2.jpg"
+    }
+  ]
+};
+
+function addPortfolioItem(artistCard, itemData) {
+  const template = document.getElementById("portfolio-item-template").content.cloneNode(true);
+
+  template.querySelector('.item-title').innerText = itemData.title;
+  template.querySelector('.item-image').src = itemData.url;
+
+  artistCard.querySelector('.portfolio').appendChild(template);
+}
+
+function addArtistCard(artistData) {
+  const template = document.getElementById("artist-card-template").content.cloneNode(true);
+
+  template.querySelector('.artist-name').innerText = artistData.name;
+
+  artistData.portfolio.forEach(itemData => {
+    addPortfolioItem(template, itemData);
+  });
+
+  document.querySelector('#artist-list').appendChild(template);
+}
+
+addArtistCard(artist);
+</script>

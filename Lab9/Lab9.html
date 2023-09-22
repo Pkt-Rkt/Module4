@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eCharts</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+</head>
+<body>
+<div id="main" style="width: 900px;height:600px;"></div>
+<script type="text/javascript">
+// Specify the configuration items and data for the chart
+let options = {
+title: { text: 'Fake Store Categories' },
+xAxis: {
+data: []
+},
+yAxis: {},
+series: []
+};
+
+// Get data from the FakeStore API (Fetch or Axios the data)
+fetch('https://fakestoreapi.com/products')
+.then((response) => response.json())
+.then((json) => {
+  console.log(json);
+  // Create a map to store the number of items for each category
+  const categoryCountMap = new Map();
+  json.forEach((product) => {
+    const category = product.category;
+    if (!categoryCountMap.has(category)) {
+      categoryCountMap.set(category, 0);
+    }
+    categoryCountMap.set(category, categoryCountMap.get(category) + 1);
+  });
+
+  // Update the chart options with the category count data
+  options.xAxis.data = Array.from(categoryCountMap.keys());
+  options.series.push({
+    name: '# products',
+    type: 'bar',
+    data: Array.from(categoryCountMap.values())
+  });
+
+  // Display the chart
+  myChart.setOption(options);
+})
+
+// Initialise the echarts instance based on the prepared div
+let myChart = echarts.init(document.getElementById('main'));
+</script>
+</body>
+</html>
